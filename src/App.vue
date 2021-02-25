@@ -19,6 +19,9 @@ export default {
   components: {
     Header,
     BaseContainer
+  },
+  created(){
+    document.title = "MITO - Multi Language Interactive Tool"
   }
 }
 </script>
