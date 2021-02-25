@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="container">
     <Header title="Multi Language Interactive Tool"/>
-    <BaseForm></BaseForm>
+    <BaseContainer></BaseContainer>
     
     
     
@@ -11,14 +11,14 @@
 
 <script>
 import Header from './components/Header.vue'
-import BaseForm from './components/BaseForm.vue'
+import BaseContainer from './components/BaseContainer.vue'
 
 
 export default {
   name: 'App',
   components: {
     Header,
-    BaseForm
+    BaseContainer
   }
 }
 </script>
