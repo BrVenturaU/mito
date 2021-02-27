@@ -4,16 +4,28 @@
             <b-col cols="12">
                 <h2 class="mb-4">Image to Text (OCR)</h2>
                 <b-form enctype="multipart/form-data">
-                    <b-form-file 
-                        accept="image/*"
-                        v-model="file"
-                        @change="onChangeFile"
-                        :state="Boolean(file)"
-                        placeholder="Choose a file or drop it here..."
-                        drop-placeholder="Drop file here..."
-                        required class="mb-3"></b-form-file>
-
-                        <v-select label="NAT" :options="options" v-model="selected" class="mb-3"></v-select>
+                    <b-form-group
+                        class="text-left"
+                        label="Add a image: *"
+                        label-for="file"
+                        >
+                        <b-form-file 
+                            id="file"
+                            accept="image/*"
+                            v-model="file"
+                            @change="onChangeFile"
+                            :state="Boolean(file)"
+                            placeholder="Choose a file or drop it here..."
+                            drop-placeholder="Drop file here..."
+                            required class="mb-3"></b-form-file>
+                        </b-form-group>
+                        <b-form-group
+                            class="text-left"
+                            label="Select the image's language: *"
+                            label-for="lang"
+                        >
+                            <v-select id="lang" label="nat" :options="options" v-model="selected" class="mb-3"></v-select>
+                        </b-form-group>
                         <b-progress height="2.1rem" v-if="isLoading">
                             <b-progress-bar style="font-size: 1rem;" :value="progress" :label-html="progressMessage" variant="info" striped :animated="true"></b-progress-bar>
                         </b-progress>
@@ -58,8 +70,8 @@ export default {
             lines:10,
             copied: false,
             selected: {
-                AFR: 'afr',
-                NAT: 'Afrikaans'
+                name: 'afr',
+                nat: 'Afrikaans'
             }
         }
     },
@@ -70,6 +82,11 @@ export default {
         recognize(){
             let vm = this;
             if(vm.file == null) return
+            if(vm.selected == null){
+                vm.selected = vm.options[0];
+                return
+            }
+                
             vm.isLoading = true;
             const worker = createWorker({
                 logger: m => {
@@ -77,11 +94,10 @@ export default {
                     vm.progressMessage = `${m.status} - ${vm.progress.toFixed(2)}%`;
                 },
             });
-            console.log(Object.entries(vm.selected)[0][1]);
             let getText = async () => {
                 await worker.load();
-                await worker.loadLanguage(Object.entries(vm.selected)[0][1]);
-                await worker.initialize(Object.entries(vm.selected)[0][1], OEM.LSTM_ONLY);
+                await worker.loadLanguage(vm.selected.name);
+                await worker.initialize(vm.selected.name, OEM.LSTM_ONLY);
                 await worker.setParameters({
                     tessedit_pageseg_mode: PSM.SINGLE_BLOCK,
                 });
@@ -124,413 +140,413 @@ export default {
 
 const languajes = [
     {
-        AFR: 'afr',
-        NAT: 'Afrikaans'
+        name: 'afr',
+        nat: 'Afrikaans'
     },
     {
-        AMH: 'amh',
-        NAT: 'Amharic'
+        name: 'amh',
+        nat: 'Amharic'
     },
     {
-        ARA: 'ara',
-        NAT: 'Arabic'
+        name: 'ara',
+        nat: 'Arabic'
     },
     {
-        ASM: 'asm',
-        NAT: 'Assamese'
+        name: 'asm',
+        nat: 'Assamese'
     },
     {
-        AZE: 'aze',
-        NAT: 'Azerbaijani'
+        name: 'aze',
+        nat: 'Azerbaijani'
     },
     {
-        AZE_CYRL: 'aze_cyrl',
-        NAT: 'Azerbaijani-Cyrillic'
+        name: 'aze_cyrl',
+        nat: 'Azerbaijani-Cyrillic'
     },
     {
-        BEL: 'bel',
-        NAT: 'Belarusian'
+        name: 'bel',
+        nat: 'Belarusian'
     },
     {
-        BEN: 'ben',
-        NAT: 'Bengali'
+        name: 'ben',
+        nat: 'Bengali'
     },
     {
-        BOD: 'bod',
-        NAT: 'Tibetan'
+        name: 'bod',
+        nat: 'Tibetan'
     },
     {
-        BOS: 'bos',
-        NAT: 'Bosnian'
+        name: 'bos',
+        nat: 'Bosnian'
     },
     {
-        BUL: 'bul',
-        NAT: 'Bulgarian'
+        name: 'bul',
+        nat: 'Bulgarian'
     },
     {
-        CAT: 'cat',
-        NAT: 'Catalan-Valencian'
+        name: 'cat',
+        nat: 'Catalan-Valencian'
     },
     {
-        CEB: 'ceb',
-        NAT: 'Cebuano'
+        name: 'ceb',
+        nat: 'Cebuano'
     },
     {
-        CES: 'ces',
-        NAT: 'Czech'
+        name: 'ces',
+        nat: 'Czech'
     },
     {
-        CHI_SIM: 'chi_sim',
-        NAT: 'Chinese-Simplified'
+        name: 'chi_sim',
+        nat: 'Chinese-Simplified'
     },
     {
-        CHI_TRA: 'chi_tra',
-        NAT: 'Chinese-Traditional'
+        name: 'chi_tra',
+        nat: 'Chinese-Traditional'
     },
     {
-        CHR: 'chr',
-        NAT: 'Cherokee'
+        name: 'chr',
+        nat: 'Cherokee'
     },
     {
-        CYM: 'cym',
-        NAT: 'Welsh'
+        name: 'cym',
+        nat: 'Welsh'
     },
     {
-        DAN: 'dan',
-        NAT: 'Danish'
+        name: 'dan',
+        nat: 'Danish'
     },
     {
-        DEU: 'deu',
-        NAT: 'German'
+        name: 'deu',
+        nat: 'German'
     },
     {
-        DZO: 'dzo',
-        NAT: 'Dzongkha'
+        name: 'dzo',
+        nat: 'Dzongkha'
     },
     {
-        ELL: 'ell',
-        NAT: 'Greek-Modern-(1453-)'
+        name: 'ell',
+        nat: 'Greek-Modern-(1453-)'
     },
     {
-        ENG: 'eng',
-        NAT: 'English'
+        name: 'eng',
+        nat: 'English'
     },
     {
-        ENM: 'enm',
-        NAT: 'English-Middle-(1100-1500)'
+        name: 'enm',
+        nat: 'English-Middle-(1100-1500)'
     },
     {
-        EPO: 'epo',
-        NAT: 'Esperanto'
+        name: 'epo',
+        nat: 'Esperanto'
     },
     {
-        EST: 'est',
-        NAT: 'Estonian'
+        name: 'est',
+        nat: 'Estonian'
     },
     {
-        EUS: 'eus',
-        NAT: 'Basque'
+        name: 'eus',
+        nat: 'Basque'
     },
     {
-        FAS: 'fas',
-        NAT: 'Persian'
+        name: 'fas',
+        nat: 'Persian'
     },
     {
-        FIN: 'fin',
-        NAT: 'Finnish'
+        name: 'fin',
+        nat: 'Finnish'
     },
     {
-        FRA: 'fra',
-        NAT: 'French'
+        name: 'fra',
+        nat: 'French'
     },
     {
-        FRK: 'frk',
-        NAT: 'German-Fraktur'
+        name: 'frk',
+        nat: 'German-Fraktur'
     },
     {
-        FRM: 'frm',
-        NAT: 'French-Middle(ca.1400-1600)'
+        name: 'frm',
+        nat: 'French-Middle(ca.1400-1600)'
     },
     {
-        GLE: 'gle',
-        NAT: 'Irish'
+        name: 'gle',
+        nat: 'Irish'
     },
     {
-        GLG: 'glg',
-        NAT: 'Galician'
+        name: 'glg',
+        nat: 'Galician'
     },
     {
-        GRC: 'grc',
-        NAT: 'Greek-Ancient-(-1453)'
+        name: 'grc',
+        nat: 'Greek-Ancient-(-1453)'
     },
     {
-        GUJ: 'guj',
-        NAT: 'Gujarati'
+        name: 'guj',
+        nat: 'Gujarati'
     },
     {
-        HAT: 'hat',
-        NAT: 'Haitian-Haitian'
+        name: 'hat',
+        nat: 'Haitian-Haitian'
     },
     {
-        HEB: 'heb',
-        NAT: 'Hebrew'
+        name: 'heb',
+        nat: 'Hebrew'
     },
     {
-        HIN: 'hin',
-        NAT: 'Hindi'
+        name: 'hin',
+        nat: 'Hindi'
     },
     {
-        HRV: 'hrv',
-        NAT: 'Croatian'
+        name: 'hrv',
+        nat: 'Croatian'
     },
     {
-        HUN: 'hun',
-        NAT: 'Hungarian'
+        name: 'hun',
+        nat: 'Hungarian'
     },
     {
-        IKU: 'iku',
-        NAT: 'Inuktitut'
+        name: 'iku',
+        nat: 'Inuktitut'
     },
     {
-        IND: 'ind',
-        NAT: 'Indonesian'
+        name: 'ind',
+        nat: 'Indonesian'
     },
     {
-        ISL: 'isl',
-        NAT: 'Icelandic'
+        name: 'isl',
+        nat: 'Icelandic'
     },
     {
-        ITA: 'ita',
-        NAT: 'Italian'
+        name: 'ita',
+        nat: 'Italian'
     },
     {
-        ITA_OLD: 'ita_old',
-        NAT: 'Italian-Old'
+        name: 'ita_old',
+        nat: 'Italian-Old'
     },
     {
-        JAV: 'jav',
-        NAT: 'Javanese'
+        name: 'jav',
+        nat: 'Javanese'
     },
     {
-        JPN: 'jpn',
-        NAT: 'Japanese'
+        name: 'jpn',
+        nat: 'Japanese'
     },
     {
-        KAN: 'kan',
-        NAT: 'Kannada'
+        name: 'kan',
+        nat: 'Kannada'
     },
     {
-        KAT: 'kat',
-        NAT: 'Georgian'
+        name: 'kat',
+        nat: 'Georgian'
     },
     {
-        KAT_OLD: 'kat_old',
-        NAT: 'Georgian-Old'
+        name: 'kat_old',
+        nat: 'Georgian-Old'
     },
     {
-        KAZ: 'kaz',
-        NAT: 'Kazakh'
+        name: 'kaz',
+        nat: 'Kazakh'
     },
     {
-        KHM: 'khm',
-        NAT: 'Central'
+        name: 'khm',
+        nat: 'Central'
     },
     {
-        KIR: 'kir',
-        NAT: 'Kirghiz-Kyrgyz'
+        name: 'kir',
+        nat: 'Kirghiz-Kyrgyz'
     },
     {
-        KOR: 'kor',
-        NAT: 'Korean'
+        name: 'kor',
+        nat: 'Korean'
     },
     {
-        KUR: 'kur',
-        NAT: 'Kurdish'
+        name: 'kur',
+        nat: 'Kurdish'
     },
     {
-        LAO: 'lao',
-        NAT: 'Lao'
+        name: 'lao',
+        nat: 'Lao'
     },
     {
-        LAT: 'lat',
-        NAT: 'Latin'
+        name: 'lat',
+        nat: 'Latin'
     },
     {
-        LAV: 'lav',
-        NAT: 'Latvian'
+        name: 'lav',
+        nat: 'Latvian'
     },
     {
-        LIT: 'lit',
-        NAT: 'Lithuanian'
+        name: 'lit',
+        nat: 'Lithuanian'
     },
     {
-        MAL: 'mal',
-        NAT: 'Malayalam'
+        name: 'mal',
+        nat: 'Malayalam'
     },
     {
-        MAR: 'mar',
-        NAT: 'Marathi'
+        name: 'mar',
+        nat: 'Marathi'
     },
     {
-        MKD: 'mkd',
-        NAT: 'Macedonian'
+        name: 'mkd',
+        nat: 'Macedonian'
     },
     {
-        MLT: 'mlt',
-        NAT: 'Maltese'
+        name: 'mlt',
+        nat: 'Maltese'
     },
     {
-        MSA: 'msa',
-        NAT: 'Malay'
+        name: 'msa',
+        nat: 'Malay'
     },
     {
-        MYA: 'mya',
-        NAT: 'Burmese'
+        name: 'mya',
+        nat: 'Burmese'
     },
     {
-        NEP: 'nep',
-        NAT: 'Nepali'
+        name: 'nep',
+        nat: 'Nepali'
     },
     {
-        NLD: 'nld',
-        NAT: 'Dutch-Flemish'
+        name: 'nld',
+        nat: 'Dutch-Flemish'
     },
     {
-        NOR: 'nor',
-        NAT: 'Norwegian'
+        name: 'nor',
+        nat: 'Norwegian'
     },
     {
-        ORI: 'ori',
-        NAT: 'Oriya'
+        name: 'ori',
+        nat: 'Oriya'
     },
     {
-        PAN: 'pan',
-        NAT: 'Panjabi-Punjabi'
+        name: 'pan',
+        nat: 'Panjabi-Punjabi'
     },
     {
-        POL: 'pol',
-        NAT: 'Polish'
+        name: 'pol',
+        nat: 'Polish'
     },
     {
-        POR: 'por',
-        NAT: 'Portuguese'
+        name: 'por',
+        nat: 'Portuguese'
     },
     {
-        PUS: 'pus',
-        NAT: 'Pushto-Pashto'
+        name: 'pus',
+        nat: 'Pushto-Pashto'
     },
     {
-        RON: 'ron',
-        NAT: 'Romanian-Moldavian-Moldovan'
+        name: 'ron',
+        nat: 'Romanian-Moldavian-Moldovan'
     },
     {
-        RUS: 'rus',
-        NAT: 'Russian'
+        name: 'rus',
+        nat: 'Russian'
     },
     {
-        SAN: 'san',
-        NAT: 'Sanskrit'
+        name: 'san',
+        nat: 'Sanskrit'
     },
     {
-        SIN: 'sin',
-        NAT: 'Sinhala-Sinhalese'
+        name: 'sin',
+        nat: 'Sinhala-Sinhalese'
     },
     {
-        SLK: 'slk',
-        NAT: 'Slovak'
+        name: 'slk',
+        nat: 'Slovak'
     },
     {
-        SLV: 'slv',
-        NAT: 'Slovenian'
+        name: 'slv',
+        nat: 'Slovenian'
     },
     {
-        SPA: 'spa',
-        NAT: 'Spanish-Castilian'
+        name: 'spa',
+        nat: 'Spanish-Castilian'
     },
     {
-        SPA_OLD: 'spa_old',
-        NAT: 'Spanish-Castilian-Old'
+        name: 'spa_old',
+        nat: 'Spanish-Castilian-Old'
     },
     {
-        SQI: 'sqi',
-        NAT: 'Albanian'
+        name: 'sqi',
+        nat: 'Albanian'
     },
     {
-        SRP: 'srp',
-        NAT: 'Serbian'
+        name: 'srp',
+        nat: 'Serbian'
     },
     {
-        SRP_LATN: 'srp_latn',
-        NAT: 'Serbian-Latin'
+        name: 'srp_latn',
+        nat: 'Serbian-Latin'
     },
     {
-        SWA: 'swa',
-        NAT: 'Swahili'
+        name: 'swa',
+        nat: 'Swahili'
     },
     {
-        SWE: 'swe',
-        NAT: 'Swedish'
+        name: 'swe',
+        nat: 'Swedish'
     },
     {
-        SYR: 'syr',
-        NAT: 'Syriac'
+        name: 'syr',
+        nat: 'Syriac'
     },
     {
-        TAM: 'tam',
-        NAT: 'Tamil'
+        name: 'tam',
+        nat: 'Tamil'
     },
     {
-        TEL: 'tel',
-        NAT: 'Telugu'
+        name: 'tel',
+        nat: 'Telugu'
     },
     {
-        TGK: 'tgk',
-        NAT: 'Tajik'
+        name: 'tgk',
+        nat: 'Tajik'
     },
     {
-        TGL: 'tgl',
-        NAT: 'Tagalog'
+        name: 'tgl',
+        nat: 'Tagalog'
     },
     {
-        THA: 'tha',
-        NAT: 'Thai'
+        name: 'tha',
+        nat: 'Thai'
     },
     {
-        TIR: 'tir',
-        NAT: 'Tigrinya'
+        name: 'tir',
+        nat: 'Tigrinya'
     },
     {
-        TUR: 'tur',
-        NAT: 'Turkish'
+        name: 'tur',
+        nat: 'Turkish'
     },
     {
-        UIG: 'uig',
-        NAT: 'Uighur-Uyghur'
+        name: 'uig',
+        nat: 'Uighur-Uyghur'
     },
     {
-        UKR: 'ukr',
-        NAT: 'Ukrainian'
+        name: 'ukr',
+        nat: 'Ukrainian'
     },
     {
-        URD: 'urd',
-        NAT: 'Urdu'
+        name: 'urd',
+        nat: 'Urdu'
     },
     {
-        UZB: 'uzb',
-        NAT: 'Uzbek'
+        name: 'uzb',
+        nat: 'Uzbek'
     },
     {
-        UZB_CYRL: 'uzb_cyrl',
-        NAT: 'Uzbek-Cyrillic'
+        name: 'uzb_cyrl',
+        nat: 'Uzbek-Cyrillic'
     },
     {
-        VIE: 'vie',
-        NAT: 'Vietnamese'
+        name: 'vie',
+        nat: 'Vietnamese'
     },
     {
-        YID: 'yid',
-        NAT: 'Yiddish'
-    },
+        name: 'yid',
+        nat: 'Yiddish'
+    }
 ];
 
 
