@@ -3,7 +3,7 @@
         <b-col cols="12">
             <div class="card mb-2 mx-auto shadow" style="max-width: 70%">
                 <img src="@/assets/card-header-img.svg" class="img-fluid card-img-top" alt="App Image">
-                <b-tabs content-class="my-3" justified active-nav-item-class="font-weight-bold text-white bg-dark">
+                <b-tabs content-class="my-4" justified active-nav-item-class="font-weight-bold text-white bg-dark">
                     <b-tab title="Text To Speech" active>
                         <TextToSpeechForm></TextToSpeechForm> 
                     </b-tab>

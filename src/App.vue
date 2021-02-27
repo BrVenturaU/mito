@@ -2,10 +2,6 @@
   <div id="app" class="container">
     <Header title="Multi Language Interactive Tool"/>
     <BaseContainer></BaseContainer>
-    
-    
-    
-    
   </div>
 </template>
 
