@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css';
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
@@ -11,7 +13,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
-
+Vue.component('v-select', vSelect)
 Vue.config.productionTip = false
 
 new Vue({
