@@ -5,17 +5,22 @@
       <!-- <b-button @click="enableWebCam">Hola</b-button> -->
       <section id="demos">
         <div id="liveView" class="camView">
-          <b-button class="mb-3" variant="primary" id="webcamButton" @click="enableWebCam">Enable Webcam <b-icon icon="camera-video"></b-icon></b-button>
+          <b-button
+            class="mb-3"
+            variant="primary"
+            id="webcamButton"
+            @click="enableWebCam"
+            >Enable Webcam <b-icon icon="camera-video"></b-icon
+          ></b-button>
           <video id="webcam" autoplay width="640" height="480"></video>
         </div>
       </section>
- 
     </b-col>
   </b-row>
 </template>
 
 <script>
-import * as cocoSsd from '@tensorflow-models/coco-ssd'
+import * as cocoSsd from "@tensorflow-models/coco-ssd";
 export default {
   name: "ImageScanner",
   methods: {
@@ -134,13 +139,10 @@ export default {
       });
     },
   },
-
 };
 </script>
 
-<style >
-
-
+<style>
 video {
   display: block;
   width: calc(100% - 20px);
