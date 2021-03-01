@@ -10,6 +10,7 @@
   "dependencies": {
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",
+    "braille": "^1.1.0",
     "core-js": "^3.6.5",
     "tesseract.js": "^2.1.4",
     "vue": "^2.6.12",

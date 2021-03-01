@@ -29,21 +29,25 @@
                         label-for="input-formatter">
                         <b-form-textarea
                             id="input-formatter"
-                            rows="5"
+                            rows="3"
                             no-resize
                             required
                             v-model="text1"
                             placeholder="Enter text"
                             :formatter="formatter">
-                        </b-form-textarea>
-                    </b-form-group>
-                    <b-form-textarea 
-                        rows="5"
-                        no-resize
-                        required>
-                        {{ text1 }}
-                    </b-form-textarea>
+                        </b-form-textarea> 
 
+                        <blockquote class="blockquote text-center" >
+                            <p class="mb-0 blockquote-footer">{{text1}}</p>
+                        </blockquote>
+                    </b-form-group >
+
+                    
+                    
+                    
+
+                    
+                        
                 </div>
                 
             </b-col>
@@ -80,5 +84,21 @@ export default {
 };
 </script>
 <style scoped>
+
+blockquote {
+    margin-top: -50px;
+    padding-top: -100px;
+    border-radius: 5px;
+    margin-top: 3rem;
+    color:white;
+    width: 100%;
+    font-size:50px;
+    border-left:none;
+    background-color: rgba(200, 200, 200, 0.2); 
+}
+
+
+
+
 
 </style>
