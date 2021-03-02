@@ -5,17 +5,13 @@
                 <h2>Braille Translator</h2>
                 <div class="row mt-5">
                     <div class="col-sm-6">
-                        <select class="custom-select" name="valueFrom" id="valueFrom">
-                            <option selected>Select an option</option>
-                            <option :value="1">Spanish</option>
-                            <option :value="2">Braille</option>
+                        <select class="custom-select" name="selectedValueFrom" id="selectedValueFrom" @change="onChangeSelectedValue">
+                            <option v-for="option of options" :key="option.id" :value="option.id">{{option.name}}</option>
                         </select>
                     </div>
                     <div class="col-sm-6">
-                        <select class="custom-select" name="valueResult" id="valueResult">
-                            <option selected>Select an option</option>
-                            <option :value="1">Spanish</option>
-                            <option :value="2">Braille</option>
+                        <select class="custom-select" name="selectedValueResult" id="selectedValueResult" @change="onChangeSelectedValue">
+                            <option v-for="option of options" :key="option.id" :value="option.id">{{option.name}}</option>
                         </select>
                     </div>
                 </div>
@@ -31,13 +27,14 @@
                             rows="3"
                             no-resize
                             required
-                            v-model="valueResult"
+                            v-model="valueFrom"
+                            @keyup="onTypingText"
                             placeholder="Enter text"
-                            :formatter="formatter">
+                            :class="{'braille':selectedValueFrom == 2}">
                         </b-form-textarea>
                          <b-form-input
-                            class="text-center text-dark input-size mt-3"
-                            v-model="valueResult"
+                            :class="['text-center', 'text-dark', 'input-size mt-3', selectedValueResult == 2 ? 'braille' : '']"
+                            :value="valueResult"
                             type="text"
                             readonly
                             style="font-size: 2rem">
@@ -54,28 +51,69 @@
 <script>
 import br from 'braille'
 
-
-let code = br.toBraille('ANOTHER WORD'); //  ⠑⠭⠁⠍⠏⠇⠑⠀⠞⠑⠭⠞⠀⠂⠆⠒
-let text = br.toText('⠁⠝⠕⠞⠓⠑⠗⠀⠺⠕⠗⠙'); //  ANOTHER WORD
-console.log(code + ' ' + text)
-
-
-
 export default {
     name: 'BrailleTranslatorForm',
     data() {
       return {
           valueFrom: '',
-          valueResult: ''
+          valueResult: '',
+          selectedValueFrom: 0,
+          selectedValueResult: 0,
+          fontClass: '',
+          options: [{id:0, name:'Select an option'}, {id:1, name:'Text'}, {id:2, name:'Braille'}]
       }
     },
     methods: {
-      formatter(value) {
-        return value.toLowerCase()
-      }
+        capitalizeText(text){    
+            this.valueResult = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+        },
+        onChangeSelectedValue(event){
+            let value = event.target.value
+            if(event.target.id == "selectedValueFrom")
+                this.selectedValueFrom = parseInt(value)
+            else
+                this.selectedValueResult = parseInt(value)
+
+            this.onTypingText()
+        },
+        onTypingText(){
+            let vm = this
+            
+            if(vm.selectedValueFrom != 0 && vm.selectedValueResult != 0){
+                switch (vm.selectedValueFrom) {
+                    case vm.selectedValueResult:
+                        vm.valueResult = vm.valueFrom
+                        break;
+
+                    case 1:{
+                        vm.valueResult = br.toBraille(vm.valueFrom);
+                        console.log(vm.valueResult);
+                        break;
+                    }
+                    case 2:{
+                        let braille = br.toBraille(vm.valueFrom);
+                        vm.capitalizeText(br.toText(braille));
+                        console.log(vm.valueResult)
+                        break;
+                    }
+                }
+            }
+
+        }
     }
 };
 </script>
 <style scoped>
-
+@font-face {
+  font-family: 'Braille6';
+  src: url('../assets/Braille6-ANSI.ttf'); /* IE9 Compat Modes */
+  src: url('../assets/Braille6-ANSI.ttf') format('embedded-opentype'), /* IE6-IE8 */
+       url('../assets/Braille6-ANSI.ttf') format('woff2'), /* Super Modern Browsers */
+       url('../assets/Braille6-ANSI.ttf') format('woff'), /* Pretty Modern Browsers */
+       url('../assets/Braille6-ANSI.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../assets/Braille6-ANSI.ttf') format('svg'); /* Legacy iOS */
+}
+.braille{
+    font-family: 'Braille6', Fallback, sans-serif;
+}
 </style>
