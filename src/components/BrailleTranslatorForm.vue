@@ -28,7 +28,6 @@
                             no-resize
                             required
                             v-model="valueFrom"
-                            @keyup="onTypingText"
                             placeholder="Enter text"
                             :class="{'braille':selectedValueFrom == 2}">
                         </b-form-textarea>
@@ -50,6 +49,7 @@
 
 <script>
 import br from 'braille'
+import _ from 'lodash'
 
 export default {
     name: 'BrailleTranslatorForm',
@@ -63,6 +63,15 @@ export default {
           options: [{id:0, name:'Select an option'}, {id:1, name:'Text'}, {id:2, name:'Braille'}]
       }
     },
+    created(){
+        this.debouncedText = _.debounce(this.onTypingText, 500);
+    },
+    watch:{
+        valueFrom: function(){
+            this.valueResult = 'Esperando...'
+            this.debouncedText();
+        }
+    },
     methods: {
         capitalizeText(text){    
             this.valueResult = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
@@ -74,7 +83,7 @@ export default {
             else
                 this.selectedValueResult = parseInt(value)
 
-            this.onTypingText()
+            this.debouncedText()
         },
         onTypingText(){
             let vm = this
